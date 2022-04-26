@@ -11,37 +11,33 @@ import java.net.URI
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 class AuthController(@Autowired private val userService: UserService) {
 
     // Login is "/api/user/login"
 
     // All permitted
-
-    @PostMapping("/authentication")
+    @PostMapping("/register")
     fun registerUser(@RequestBody newUserInfo: NewUserInfo) : ResponseEntity<UserEntity> {
-        val uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user").toUriString())
+        val uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/register").toUriString())
         return ResponseEntity.created(uri).body(userService.registerUser(newUserInfo))
     }
 
     // Admin endpoints
-
-    @GetMapping("/admin/user/all")
+    @GetMapping("/all")
     fun getAllUsers() : ResponseEntity<List<UserEntity>> {
         return ResponseEntity.ok().body(userService.getAllUsers())
     }
 
-    @GetMapping("/admin/authority/all")
-    fun getAuthorities() : ResponseEntity<List<AuthorityEntity>> {
-        return ResponseEntity.ok().body(userService.getAuthorities())
-    }
-
-    @DeleteMapping("/user/delete")
+    @DeleteMapping("/delete")
     fun deleteUserById(@RequestParam id: Long) : ResponseEntity<String> {
         return userService.deleteUserById(id)
     }
 
-
+    @GetMapping("/authorities")
+    fun getAuthorities() : ResponseEntity<List<AuthorityEntity>> {
+        return ResponseEntity.ok().body(userService.getAuthorities())
+    }
 }
 
 data class NewUserInfo(

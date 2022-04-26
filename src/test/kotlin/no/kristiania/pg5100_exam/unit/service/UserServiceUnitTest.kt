@@ -19,7 +19,7 @@ class UserServiceUnitTest {
     private val userService = UserService(userRepo, authorityRepo)
 
     @Test
-    fun shouldGetAllUsers(){
+    fun shouldGetAllUsers() {
         val testUser1 = UserEntity(username = "petter", password = "pan")
         val testUser2 = UserEntity(username = "kjartan", password = "secret")
         every { userRepo.findAll() } answers {
@@ -33,7 +33,7 @@ class UserServiceUnitTest {
     }
 
     @Test
-    fun shouldGetUserByUsername(){
+    fun shouldGetUserByUsername() {
         every { userRepo.findByUsername("Petter") } answers {
             UserEntity(null, "Petter", null, null, null, mutableListOf())
         }
@@ -44,7 +44,7 @@ class UserServiceUnitTest {
     }
 
     @Test
-    fun shouldRegisterNewUser(){
+    fun shouldRegisterNewUser() {
         every { userRepo.save(any()) } answers {
             firstArg() // returns the first argument that was passed in
         }
@@ -59,7 +59,7 @@ class UserServiceUnitTest {
     }
 
     @Test
-    fun shouldDeleteUserById(){
+    fun shouldDeleteUserById() {
         every { userRepo.deleteById(1) } answers {
             nothing
         }
@@ -69,12 +69,27 @@ class UserServiceUnitTest {
     }
 
     @Test
-    fun shouldFailToDeleteUserById(){
+    fun shouldFailToDeleteUserById() {
         every { userRepo.deleteById(1) }
             .throws(EmptyResultDataAccessException(1))
 
         val responseString = userService.deleteUserById(1)
 
         assert(responseString.statusCodeValue == 404)
+    }
+
+    @Test
+    fun shouldLoadUserByUsername() {
+        every { userRepo.findByUsername("Petter") } answers {
+            UserEntity(
+                1,
+                "Petter",
+                "Pan"
+            )
+        }
+
+        val userLoaded = userService.loadUserByUsername("Petter")
+
+        assert(userLoaded.username == "Petter")
     }
 }

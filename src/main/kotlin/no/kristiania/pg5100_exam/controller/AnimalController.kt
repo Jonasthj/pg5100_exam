@@ -25,7 +25,7 @@ class AnimalController(@Autowired private val animalService: AnimalService) {
 
     @PostMapping("/add")
     fun addNewAnimal(@RequestBody newAnimal: NewAnimal) : ResponseEntity<AnimalEntity> {
-        val uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/shelter").toUriString())
+        val uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/shelter/add").toUriString())
         return ResponseEntity.created(uri).body(animalService.addNewAnimal(newAnimal))
     }
 

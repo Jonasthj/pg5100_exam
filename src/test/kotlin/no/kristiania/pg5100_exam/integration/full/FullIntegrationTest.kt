@@ -1,4 +1,4 @@
-package no.kristiania.pg5100_exam.integration
+package no.kristiania.pg5100_exam.integration.full
 
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

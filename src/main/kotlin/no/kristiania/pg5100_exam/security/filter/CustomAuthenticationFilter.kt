@@ -23,16 +23,12 @@ class CustomAuthenticationFilter(
 
     override fun attemptAuthentication(request: HttpServletRequest, response: HttpServletResponse): Authentication {
         val body = request.reader.lines().collect(Collectors.joining())
-        println(body.toString())
         val loginInfo = jacksonObjectMapper().readValue(body, LoginInfo::class.java)
-        println("USER: " + loginInfo.username + ":" + loginInfo.password)
         val authenticationToken = UsernamePasswordAuthenticationToken(loginInfo.username, loginInfo.password)
-        println("AUTH TOKEN" + authenticationToken.toString())
         return authManager.authenticate(authenticationToken)
     }
 
     override fun setAuthenticationFailureHandler(failureHandler: AuthenticationFailureHandler?) {
-        println("hei")
         super.setAuthenticationFailureHandler(failureHandler)
     }
 

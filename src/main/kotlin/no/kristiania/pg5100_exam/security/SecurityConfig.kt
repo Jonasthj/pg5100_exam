@@ -28,14 +28,19 @@ class SecurityConfig(
     override fun configure(http: HttpSecurity) {
         val authenticationFilter = CustomAuthenticationFilter(authenticationManagerBean())
         // setting default login to /api/login
-        authenticationFilter.setFilterProcessesUrl("/api/login")
+        authenticationFilter.setFilterProcessesUrl("/api/authentication")
         http.csrf().disable()
         http.sessionManagement().disable() // All future requests has jwt cookie
         http.authorizeRequests() // LEAST RESTRICTIVE TO MOST RESTRICTIVE
-            .antMatchers("/api/user/**").permitAll()
             .antMatchers("/api/authentication").permitAll()
-            .antMatchers("/api/shelter/**").hasAnyAuthority("USER", "ADMIN")
-            .antMatchers("/api/admin/**").hasAuthority("ADMIN")
+            .antMatchers("/api/user/register").permitAll()
+            .antMatchers("/api/shelter/all").hasAuthority("USER")
+            .antMatchers("/api/shelter/update").hasAuthority("USER") // param
+            .antMatchers("/api/shelter/get").hasAuthority("USER") // param
+            .antMatchers("/api/shelter/add").hasAuthority("ADMIN")
+            .antMatchers("/api/shelter/delete").hasAuthority("ADMIN") // param
+            .antMatchers("/api/user/all").hasAuthority("ADMIN")
+            .antMatchers("/api/user/authorities").hasAuthority("ADMIN")
         // Authenticate every single request that comes through, even if permitAll()
         http.authorizeRequests().anyRequest().authenticated()
         http.addFilter(authenticationFilter)

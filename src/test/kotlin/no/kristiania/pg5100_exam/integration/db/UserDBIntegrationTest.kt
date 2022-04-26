@@ -1,6 +1,7 @@
-package no.kristiania.pg5100_exam.integration
+package no.kristiania.pg5100_exam.integration.db
 
 import no.kristiania.pg5100_exam.controller.NewUserInfo
+import no.kristiania.pg5100_exam.service.AnimalService
 import no.kristiania.pg5100_exam.service.UserService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,8 +14,9 @@ import org.springframework.test.context.ActiveProfiles
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
 @Import(UserService::class)
-class DBIntegrationTest(
-    @Autowired private val userService: UserService
+class UserDBIntegrationTest(
+    @Autowired private val userService: UserService,
+    @Autowired private val animalService: AnimalService
 ) {
 
     @Test

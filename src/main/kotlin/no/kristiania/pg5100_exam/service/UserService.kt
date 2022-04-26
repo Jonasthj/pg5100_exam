@@ -50,10 +50,10 @@ class UserService(
     }
 
     override fun loadUserByUsername(username: String?): UserDetails {
-        println("loadbyusername: $username")
+        println("Loading user by username")
         username?.let {
-            println("inside let: user it not null")
             val user = userRepository.findByUsername(it)
+            println("Giving user authorities: " + user?.authorities?.map { SimpleGrantedAuthority(it.authorityName) })
             return User(
                 user?.username,
                 user?.password,
