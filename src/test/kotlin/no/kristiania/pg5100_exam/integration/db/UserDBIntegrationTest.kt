@@ -15,18 +15,17 @@ import org.springframework.test.context.ActiveProfiles
 @ActiveProfiles("test")
 @Import(UserService::class)
 class UserDBIntegrationTest(
-    @Autowired private val userService: UserService,
-    @Autowired private val animalService: AnimalService
+    @Autowired private val userService: UserService
 ) {
 
     @Test
-    fun shouldGetUsers(){
+    fun shouldGetAllUsers(){
         val result = userService.getAllUsers()
         assert(result.size == 1)
     }
 
     @Test
-    fun registerAndFindUser(){
+    fun shouldRegisterAndFindUser(){
         val newUser = NewUserInfo("petter", "pan")
         val createdUser = userService.registerUser(newUser)
         assert(createdUser.username.equals("petter"))
@@ -35,11 +34,25 @@ class UserDBIntegrationTest(
     }
 
     @Test
-    fun createUserAndGetByUsername(){
+    fun shouldCreateUserAndGetByUsername(){
         val newUser = NewUserInfo("petter", "pan")
         val createdUser = userService.registerUser(newUser)
         assert(createdUser.username == "petter")
         val foundUser = userService.getUserByUsername("petter")
         assert(foundUser?.username == "petter")
+    }
+
+    @Test
+    fun shouldDeleteUserById(){
+        val newUser = NewUserInfo("petter", "pan")
+        val createdUser = userService.registerUser(newUser)
+        val deleteResponse = userService.deleteUserById(createdUser.id!!)
+        assert(deleteResponse.statusCode.is2xxSuccessful)
+    }
+
+    @Test
+    fun shouldFailToDeleteUserById() {
+        val deleteResponse = userService.deleteUserById(123123123L)
+        assert(deleteResponse.statusCode.is4xxClientError)
     }
 }

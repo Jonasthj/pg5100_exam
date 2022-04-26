@@ -37,7 +37,7 @@ class SecurityConfig(
             .antMatchers("/api/shelter/all").hasAuthority("USER")
             .antMatchers("/api/shelter/update").hasAuthority("USER") // param
             .antMatchers("/api/shelter/get").hasAuthority("USER") // param
-            .antMatchers("/api/shelter/add").hasAuthority("ADMIN")
+            .antMatchers("/api/shelter/add").hasAuthority("USER")
             .antMatchers("/api/shelter/delete").hasAuthority("ADMIN") // param
             .antMatchers("/api/user/all").hasAuthority("ADMIN")
             .antMatchers("/api/user/authorities").hasAuthority("ADMIN")

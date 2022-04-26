@@ -32,17 +32,17 @@ class AnimalService(@Autowired private val animalRepository: AnimalRepository) {
         return animalRepository.save(animal)
     }
 
-    fun updateAnimalById(id: Long, updatedAnimal: NewAnimal): ResponseEntity<AnimalEntity>? {
+    fun updateAnimalById(id: Long, updatedAnimal: NewAnimal?): ResponseEntity<AnimalEntity>? {
         try {
             if (getById(id) != null) {
                 val savedAnimal = animalRepository.save(
                     AnimalEntity(
                         id,
-                        updatedAnimal.name,
-                        updatedAnimal.age,
-                        updatedAnimal.weight,
-                        updatedAnimal.typeId,
-                        updatedAnimal.breedId
+                        updatedAnimal?.name,
+                        updatedAnimal?.age,
+                        updatedAnimal?.weight,
+                        updatedAnimal?.typeId,
+                        updatedAnimal?.breedId
                         )
                 )
                 return ResponseEntity.ok().body(savedAnimal)
