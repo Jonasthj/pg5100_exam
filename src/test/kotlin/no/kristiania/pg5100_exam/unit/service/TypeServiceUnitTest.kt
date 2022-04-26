@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 
 class TypeServiceUnitTest {
 
-    private val typeRepository = mockk<TypeRepository>()
+    /*private val typeRepository = mockk<TypeRepository>()
     private val typeService = TypeService(typeRepository)
 
     @Test
@@ -25,5 +25,5 @@ class TypeServiceUnitTest {
         assert(types.size == 2)
         assert(types[0].name == "Mammal")
         assert(types[1].name == "Fish")
-    }
+    }*/
 }

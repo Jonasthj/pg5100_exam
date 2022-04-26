@@ -28,7 +28,7 @@ class AuthController(@Autowired private val userService: UserService) {
 
     @GetMapping("/admin/user/all")
     fun getAllUsers() : ResponseEntity<List<UserEntity>> {
-        return ResponseEntity.ok().body(userService.getUsers())
+        return ResponseEntity.ok().body(userService.getAllUsers())
     }
 
     @GetMapping("/admin/authority/all")
@@ -36,8 +36,8 @@ class AuthController(@Autowired private val userService: UserService) {
         return ResponseEntity.ok().body(userService.getAuthorities())
     }
 
-    @DeleteMapping("/user/delete/{id}")
-    fun deleteUserById(@PathVariable id: Long) : ResponseEntity<String> {
+    @DeleteMapping("/user/delete")
+    fun deleteUserById(@RequestParam id: Long) : ResponseEntity<String> {
         return userService.deleteUserById(id)
     }
 

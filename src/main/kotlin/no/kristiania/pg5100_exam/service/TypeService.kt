@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 @Service
 class TypeService(@Autowired private val typeRepository: TypeRepository) {
 
-    fun getAllTypes() : List<TypeEntity> {
+    /*fun getAllTypes() : List<TypeEntity> {
         return typeRepository.findAll()
-    }
+    }*/
 }

@@ -1,11 +1,11 @@
 package no.kristiania.pg5100_exam.unit.controller
 
-import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import io.mockk.every
 import io.mockk.mockk
+import no.kristiania.pg5100_exam.controller.NewUserInfo
+import no.kristiania.pg5100_exam.model.AuthorityEntity
 import no.kristiania.pg5100_exam.model.UserEntity
-import no.kristiania.pg5100_exam.repository.AuthorityRepository
-import no.kristiania.pg5100_exam.repository.UserRepository
+import no.kristiania.pg5100_exam.service.AnimalService
 import no.kristiania.pg5100_exam.service.UserService
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -14,11 +14,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
+import org.testcontainers.shaded.org.bouncycastle.util.encoders.UTF8
+import java.time.LocalDateTime
 
 
 @ExtendWith(SpringExtension::class)
@@ -30,23 +35,92 @@ class AuthControllerUnitTest {
     class ControllerTestConfig {
         @Bean
         fun userService() = mockk<UserService>()
+        @Bean
+        fun animalService() = mockk<AnimalService>()
     }
 
     @Autowired private lateinit var userService: UserService
     @Autowired private lateinit var mockMvc: MockMvc
 
     @Test
-    fun shouldGetAllUsers(){
-        val testUser = UserEntity(username = "petter", password = "pan")
+    fun shouldRegisterUser() {
+        val newUserInfo = NewUserInfo("petter", "pan")
 
-        every { userService.getUsers() } answers {
+        every { userService.registerUser(newUserInfo) } answers {
+            UserEntity(
+                1,
+                "petter",
+                "pan",
+                LocalDateTime.now(),
+                true,
+                mutableListOf(AuthorityEntity(1, "USER"))
+            )
+        }
+
+        mockMvc.post("/api/authentication") {
+            contentType = MediaType.APPLICATION_JSON
+            content = "{\n" +
+                    "    \"username\": \"petter\",\n" +
+                    "    \"password\": \"pan\"\n" +
+                    "}"
+        }
+            .andExpect { status { is2xxSuccessful() } }
+            .andReturn().response.contentAsString.contains("petter")
+    }
+
+    @Test
+    fun shouldGetAllUsers(){
+        val testUser = UserEntity(username = "petter", password = "pan", authorities = mutableListOf(AuthorityEntity(1, "ADMIN")))
+
+        every { userService.getAllUsers() } answers {
             mutableListOf(testUser)
         }
 
-        mockMvc.get("/api/user/all"){
+        mockMvc.get("/api/admin/user/all"){
 
         }
             .andExpect { status { isOk() } }
             .andExpect { content { contentType(MediaType.APPLICATION_JSON) } }
+    }
+
+    @Test
+    fun shouldGetAuthorities(){
+
+        every { userService.getAuthorities() } answers {
+            listOf(AuthorityEntity(authorityName = "ADMIN"),
+                AuthorityEntity(authorityName = "USER"))
+        }
+
+        mockMvc.get("/api/admin/authority/all") {
+
+        }
+            .andExpect { status { isOk() } }
+            .andReturn().response.contentAsString.contains("USER")
+    }
+
+    @Test
+    fun shouldDeleteUserById() {
+
+        every { userService.deleteUserById(1) } answers {
+            ResponseEntity.ok().body("Deletion was successful")
+        }
+
+        mockMvc.delete("/api/user/delete?id=1") {
+
+        }
+            .andExpect { status { isOk() } }
+    }
+
+    @Test
+    fun shouldFailToDeleteById() {
+
+        every { userService.deleteUserById(1) } answers {
+            ResponseEntity.notFound().build()
+        }
+
+        mockMvc.delete("/api/user/delete?id=1") {
+
+        }
+            .andExpect { status { isNotFound() } }
     }
 }

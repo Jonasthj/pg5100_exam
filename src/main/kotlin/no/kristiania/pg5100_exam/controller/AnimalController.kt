@@ -43,8 +43,6 @@ class AnimalController(@Autowired private val animalService: AnimalService) {
         return animalService.deleteAnimalById(id)
     }
 
-
-
     data class NewAnimal(
         val name: String? = null,
         val age: Int? = null,

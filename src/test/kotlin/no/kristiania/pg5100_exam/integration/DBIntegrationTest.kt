@@ -19,7 +19,7 @@ class DBIntegrationTest(
 
     @Test
     fun shouldGetUsers(){
-        val result = userService.getUsers()
+        val result = userService.getAllUsers()
         assert(result.size == 1)
     }
 

@@ -22,8 +22,12 @@ class UserService(
     @Autowired private val authorityRepository: AuthorityRepository
 ) : UserDetailsService {
 
-    fun getAuthorities(): List<AuthorityEntity> {
-        return authorityRepository.findAll()
+    fun getAllUsers() : List<UserEntity> {
+        return userRepository.findAll()
+    }
+
+    fun getUserByUsername(username: String): UserEntity? {
+        return userRepository.findByUsername(username)
     }
 
     fun registerUser(newUserInfo: NewUserInfo) : UserEntity {
@@ -32,12 +36,17 @@ class UserService(
         return userRepository.save(newUser)
     }
 
-    fun getUsers() : List<UserEntity> {
-        return userRepository.findAll()
+    fun deleteUserById(id: Long) : ResponseEntity<String> {
+        return try {
+            userRepository.deleteById(id)
+            ResponseEntity.ok().body("Deletion was successful")
+        } catch (e1: EmptyResultDataAccessException) {
+            ResponseEntity.notFound().build()
+        }
     }
 
-    fun getUserByUsername(username: String): UserEntity? {
-        return userRepository.findByUsername(username)
+    fun getAuthorities(): List<AuthorityEntity> {
+        return authorityRepository.findAll()
     }
 
     override fun loadUserByUsername(username: String?): UserDetails {
@@ -56,12 +65,5 @@ class UserService(
         throw UsernameNotFoundException("error authenticating user")
     }
 
-    fun deleteUserById(id: Long) : ResponseEntity<String> {
-        return try {
-            userRepository.deleteById(id)
-            ResponseEntity.ok().body("Deletion was successful")
-        } catch (e1: EmptyResultDataAccessException) {
-            ResponseEntity.notFound().build()
-        }
-    }
+
 }
