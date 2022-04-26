@@ -1,4 +1,4 @@
-package no.kristiania.pg5100_exam.unit
+package no.kristiania.pg5100_exam.unit.controller
 
 import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import io.mockk.every

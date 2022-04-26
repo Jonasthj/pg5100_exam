@@ -1,4 +1,4 @@
-package no.kristiania.pg5100_exam.unit
+package no.kristiania.pg5100_exam.unit.service
 
 import io.mockk.every
 import io.mockk.mockk

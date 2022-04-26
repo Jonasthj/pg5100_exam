@@ -1,11 +1,11 @@
 package no.kristiania.pg5100_exam.repository
 
-import no.kristiania.pg5100_exam.model.UserEntity
+import no.kristiania.pg5100_exam.model.BreedEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface UserRepository : JpaRepository<UserEntity, Long> {
+interface BreedRepository : JpaRepository<BreedEntity, Long> {
 
-    fun findByUsername(username: String): UserEntity?
+    fun getByName(name: String): BreedEntity?
 }
