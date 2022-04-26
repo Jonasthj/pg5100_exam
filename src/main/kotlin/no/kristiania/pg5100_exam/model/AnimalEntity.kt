@@ -21,11 +21,13 @@ data class AnimalEntity(
     @Column(name = "animal_weight")
     val weight: Float?,
 
-    @Column(name = "animal_breed_id")
-    val breedId: Int?,
-
     @Column(name = "animal_type_id")
-    val typeId: Int?
+    val typeId: Int?,
+
+    @Column(name = "animal_breed_id")
+    val breedId: Int?
+
+
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

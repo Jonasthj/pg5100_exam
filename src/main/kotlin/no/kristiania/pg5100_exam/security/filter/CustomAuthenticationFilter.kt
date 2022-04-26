@@ -8,12 +8,14 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.User
+import org.springframework.security.web.authentication.AuthenticationFailureHandler
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import java.util.stream.Collectors
 import javax.servlet.FilterChain
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+import kotlin.math.log
 
 class CustomAuthenticationFilter(
     @Autowired private val authManager: AuthenticationManager
@@ -21,12 +23,17 @@ class CustomAuthenticationFilter(
 
     override fun attemptAuthentication(request: HttpServletRequest, response: HttpServletResponse): Authentication {
         val body = request.reader.lines().collect(Collectors.joining())
-        println(body)
+        println(body.toString())
         val loginInfo = jacksonObjectMapper().readValue(body, LoginInfo::class.java)
-        println(loginInfo)
+        println("USER: " + loginInfo.username + ":" + loginInfo.password)
         val authenticationToken = UsernamePasswordAuthenticationToken(loginInfo.username, loginInfo.password)
-        println("login info: username " + loginInfo.username + " password: " + loginInfo.password)
+        println("AUTH TOKEN" + authenticationToken.toString())
         return authManager.authenticate(authenticationToken)
+    }
+
+    override fun setAuthenticationFailureHandler(failureHandler: AuthenticationFailureHandler?) {
+        println("hei")
+        super.setAuthenticationFailureHandler(failureHandler)
     }
 
     override fun successfulAuthentication(

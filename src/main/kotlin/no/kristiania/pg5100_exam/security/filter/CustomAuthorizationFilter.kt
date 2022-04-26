@@ -20,21 +20,24 @@ class CustomAuthorizationFilter : OncePerRequestFilter() {
         filterChain: FilterChain
     ) {
         val accessTokenCookie = request.cookies?.first { it.name == "access_token" }?.value
+        println("COOKIE" + accessTokenCookie.toString())
         when {
             accessTokenCookie.isNullOrEmpty() -> filterChain.doFilter(request, response)
             request.servletPath.contains("/api/login") -> filterChain.doFilter(request, response)
-            request.servletPath.contains("/api/register") -> filterChain.doFilter(request, response)
+            request.servletPath.contains("/api/authentication") -> filterChain.doFilter(request, response)
             else -> {
                 try {
+                    println("INSIDE TRY")
                     val decodedAccessToken = JwtUtil.decodeToken(accessTokenCookie)
                     val username = decodedAccessToken.subject
                     println(username)
                     val authority = decodedAccessToken.getClaim("authorities")
                             .asList(String::class.java).map { SimpleGrantedAuthority(it) }
+                    println(decodedAccessToken)
                     println(authority.toString())
                     val authenticationToken = UsernamePasswordAuthenticationToken(username, null, authority)
+                    println(authority.toString())
                     SecurityContextHolder.getContext().authentication = authenticationToken
-                    println(authenticationToken.toString())
                     filterChain.doFilter(request, response)
                 } catch (e: Exception) {
                     logger.error("Authorization error ${e.message}")

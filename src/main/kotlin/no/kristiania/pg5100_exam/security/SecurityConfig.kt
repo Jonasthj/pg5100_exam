@@ -32,10 +32,10 @@ class SecurityConfig(
         http.csrf().disable()
         http.sessionManagement().disable() // All future requests has jwt cookie
         http.authorizeRequests() // LEAST RESTRICTIVE TO MOST RESTRICTIVE
-            .antMatchers("/api/login").permitAll()
-            .antMatchers("/api/register").permitAll()
-            .antMatchers("/api/user/**").hasAnyAuthority("USER", "ADMIN")
-            .antMatchers("/api/authority/**").hasAuthority("ADMIN")
+            .antMatchers("/api/user/**").permitAll()
+            .antMatchers("/api/authentication").permitAll()
+            .antMatchers("/api/shelter/**").hasAnyAuthority("USER", "ADMIN")
+            .antMatchers("/api/admin/**").hasAuthority("ADMIN")
         // Authenticate every single request that comes through, even if permitAll()
         http.authorizeRequests().anyRequest().authenticated()
         http.addFilter(authenticationFilter)

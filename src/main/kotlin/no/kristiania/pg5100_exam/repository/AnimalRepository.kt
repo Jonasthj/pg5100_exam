@@ -8,22 +8,4 @@ import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
 @Repository
-interface AnimalRepository : JpaRepository<AnimalEntity, Long> {
-
-    fun getByName(name: String): AnimalEntity?
-
-
-    @Transactional
-    @Modifying
-    @Query(
-        "UPDATE AnimalEntity a set " +
-                "a.name = ?1, " +
-                "a.age = ?2, " +
-                "a.weight = ?3, " +
-                "a.typeId = ?4, " +
-                "a.breedId = ?5 " +
-                "WHERE a.id = ?6")
-
-    fun updateAnimalById(name: String?, age: Int?, weight: Float?, typeId: Int?, breedId: Int?, id: Long?) : Int
-
-}
+interface AnimalRepository : JpaRepository<AnimalEntity, Long>

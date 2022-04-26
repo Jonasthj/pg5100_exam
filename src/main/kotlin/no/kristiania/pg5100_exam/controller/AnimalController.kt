@@ -18,9 +18,9 @@ class AnimalController(@Autowired private val animalService: AnimalService) {
         return ResponseEntity.ok().body(animalService.getAllAnimals())
     }
 
-    @GetMapping("/get/{id}")
-    fun retrieveSingleAnimal(@PathVariable id: Long) : ResponseEntity<AnimalEntity>? {
-        return animalService.getResponseById(id)
+    @GetMapping("/get")
+    fun retrieveSingleAnimal(@RequestParam id: Long) : ResponseEntity<AnimalEntity>? {
+        return animalService.getSingleAnimalResponse(id)
     }
 
     @PostMapping("/add")
@@ -29,17 +29,17 @@ class AnimalController(@Autowired private val animalService: AnimalService) {
         return ResponseEntity.created(uri).body(animalService.addNewAnimal(newAnimal))
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/update")
     fun updateAnimal(
-        @PathVariable id: Long,
+        @RequestParam id: Long,
         @RequestBody newAnimal: NewAnimal
     ): ResponseEntity<AnimalEntity>? {
 
         return animalService.updateAnimalById(id, newAnimal)
     }
 
-    @DeleteMapping("/delete/{id}")
-    fun deleteAnimal(@PathVariable id: Long) : ResponseEntity<String> {
+    @DeleteMapping("/delete")
+    fun deleteAnimal(@RequestParam id: Long) : ResponseEntity<String> {
         return animalService.deleteAnimalById(id)
     }
 

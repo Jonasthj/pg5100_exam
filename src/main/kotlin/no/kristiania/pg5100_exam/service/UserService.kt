@@ -6,10 +6,13 @@ import no.kristiania.pg5100_exam.model.UserEntity
 import no.kristiania.pg5100_exam.repository.AuthorityRepository
 import no.kristiania.pg5100_exam.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.EmptyResultDataAccessException
+import org.springframework.http.ResponseEntity
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -38,7 +41,9 @@ class UserService(
     }
 
     override fun loadUserByUsername(username: String?): UserDetails {
+        println("loadbyusername: $username")
         username?.let {
+            println("inside let: user it not null")
             val user = userRepository.findByUsername(it)
             return User(
                 user?.username,
@@ -48,6 +53,15 @@ class UserService(
         }
         // TODO: Throw specific exception (Do not say anything about user existing)
 
-        throw Exception("Error")
+        throw UsernameNotFoundException("error authenticating user")
+    }
+
+    fun deleteUserById(id: Long) : ResponseEntity<String> {
+        return try {
+            userRepository.deleteById(id)
+            ResponseEntity.ok().body("Deletion was successful")
+        } catch (e1: EmptyResultDataAccessException) {
+            ResponseEntity.notFound().build()
+        }
     }
 }
