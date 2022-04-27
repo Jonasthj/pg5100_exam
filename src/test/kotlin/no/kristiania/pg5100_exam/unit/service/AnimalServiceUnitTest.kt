@@ -51,7 +51,6 @@ class AnimalServiceUnitTest {
     @Test
     fun shouldAddNewAnimal(){
         val newAnimal = NewAnimal("Petter", null, null, null, null)
-        val animal = AnimalEntity(1, "Petter", null, null, null, null)
 
         every { animalRepository.save(any()) } answers {
             firstArg()
@@ -136,5 +135,16 @@ class AnimalServiceUnitTest {
         val responseString = animalService.deleteAnimalById(1)
 
         assert(responseString.toString().contains(HttpStatus.NOT_FOUND.toString()))
+    }
+
+    @Test
+    fun shouldGetDisplayAnimals(){
+        every { animalRepository.getDisplayAnimals() } answers {
+            listOf(Any())
+        }
+
+        val responseString = animalService.displayAllAnimalsWithTypeAndBreedName()
+
+        assert(responseString.toString().contains(HttpStatus.OK.toString()))
     }
 }

@@ -14,8 +14,6 @@ import java.net.URI
 @RequestMapping("/api/user")
 class AuthController(@Autowired private val userService: UserService) {
 
-    // Login is "/api/user/login"
-
     // All permitted
     @PostMapping("/register")
     fun registerUser(@RequestBody newUserInfo: NewUserInfo) : ResponseEntity<UserEntity> {

@@ -1,7 +1,6 @@
 package no.kristiania.pg5100_exam.integration.db
 
 import no.kristiania.pg5100_exam.controller.AnimalController.NewAnimal
-import no.kristiania.pg5100_exam.model.AnimalEntity
 import no.kristiania.pg5100_exam.service.AnimalService
 import org.junit.Assert.assertEquals
 import org.junit.jupiter.api.Test
@@ -10,7 +9,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.context.annotation.Import
 import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.test.context.ActiveProfiles
 
 @DataJpaTest
@@ -20,9 +18,11 @@ import org.springframework.test.context.ActiveProfiles
 class AnimalDBIntegrationTest(@Autowired private val animalService: AnimalService) {
 
     @Test
-    fun shouldGetAllAnimals(){
+    fun shouldAddOneAndGetAllAnimals(){
+        val newAnimal = NewAnimal(name = "KARI")
+        animalService.addNewAnimal(newAnimal)
         val result = animalService.getAllAnimals()
-        assert(result.size == 18)
+        assert(result[result.size - 1]?.name.equals("KARI"))
     }
 
     @Test

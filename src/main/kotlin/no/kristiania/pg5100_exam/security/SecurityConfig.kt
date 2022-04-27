@@ -27,24 +27,23 @@ class SecurityConfig(
 
     override fun configure(http: HttpSecurity) {
         val authenticationFilter = CustomAuthenticationFilter(authenticationManagerBean())
-        // setting default login to /api/login
+        // Login
         authenticationFilter.setFilterProcessesUrl("/api/authentication")
         http.csrf().disable()
-        http.sessionManagement().disable() // All future requests has jwt cookie
+        http.sessionManagement().disable()
         http.authorizeRequests() // LEAST RESTRICTIVE TO MOST RESTRICTIVE
             .antMatchers("/api/authentication").permitAll()
             .antMatchers("/api/user/register").permitAll()
             .antMatchers("/api/shelter/all").hasAuthority("USER")
-            .antMatchers("/api/shelter/update").hasAuthority("USER") // param
-            .antMatchers("/api/shelter/get").hasAuthority("USER") // param
+            .antMatchers("/api/shelter/update**").hasAuthority("USER") // param
+            .antMatchers("/api/shelter/get**").hasAuthority("USER") // param
             .antMatchers("/api/shelter/add").hasAuthority("USER")
+            .antMatchers("/api/shelter/display").hasAuthority("USER")
             .antMatchers("/api/shelter/delete").hasAuthority("ADMIN") // param
             .antMatchers("/api/user/all").hasAuthority("ADMIN")
             .antMatchers("/api/user/authorities").hasAuthority("ADMIN")
-        // Authenticate every single request that comes through, even if permitAll()
         http.authorizeRequests().anyRequest().authenticated()
         http.addFilter(authenticationFilter)
-        // Adding authorization before authentication, so that new users doesnt auto fail authentication
         http.addFilterBefore(CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter::class.java)
     }
 

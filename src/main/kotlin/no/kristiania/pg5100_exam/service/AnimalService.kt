@@ -72,4 +72,8 @@ class AnimalService(@Autowired private val animalRepository: AnimalRepository) {
             ResponseEntity.notFound().build()
         }
     }
+
+    fun displayAllAnimalsWithTypeAndBreedName(): ResponseEntity<List<Any>> {
+        return ResponseEntity.ok().body(animalRepository.getDisplayAnimals())
+    }
 }

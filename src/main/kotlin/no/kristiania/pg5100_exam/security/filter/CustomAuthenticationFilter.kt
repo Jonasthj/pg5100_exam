@@ -15,7 +15,6 @@ import javax.servlet.FilterChain
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import kotlin.math.log
 
 class CustomAuthenticationFilter(
     @Autowired private val authManager: AuthenticationManager
@@ -38,8 +37,6 @@ class CustomAuthenticationFilter(
         chain: FilterChain?,
         authResult: Authentication?
     ) {
-        // Give cookie with JWT
-        // Principal = person that is successfully authenticated
         val user: User = authResult?.principal as User
         val accessToken = JwtUtil.createToken(user, request?.requestURL.toString())
         response?.contentType = APPLICATION_JSON_VALUE

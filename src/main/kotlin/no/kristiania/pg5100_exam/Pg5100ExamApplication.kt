@@ -7,8 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 @SpringBootApplication
 class Pg5100ExamApplication{
-
-	// TODO: Move?
+	
 	@Bean
 	fun passwordEncoder() : BCryptPasswordEncoder {
 		return BCryptPasswordEncoder()

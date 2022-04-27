@@ -1,7 +1,6 @@
 package no.kristiania.pg5100_exam.integration.db
 
 import no.kristiania.pg5100_exam.controller.NewUserInfo
-import no.kristiania.pg5100_exam.service.AnimalService
 import no.kristiania.pg5100_exam.service.UserService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,9 +18,11 @@ class UserDBIntegrationTest(
 ) {
 
     @Test
-    fun shouldGetAllUsers(){
+    fun shouldAddNewUserAndGetAllUsers(){
+        val newUser = NewUserInfo("petter", "pan")
+        userService.registerUser(newUser)
         val result = userService.getAllUsers()
-        assert(result.size == 1)
+        assert(result[result.size - 1].username.equals("petter"))
     }
 
     @Test

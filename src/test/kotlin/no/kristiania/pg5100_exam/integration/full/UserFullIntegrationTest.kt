@@ -23,11 +23,14 @@ class UserFullIntegrationTest {
 
     @Test
     fun shouldRegisterNewUserAndLogIn(){
+        val randomNum = (0..1000).random()
+        val username = "user$randomNum"
+        val password = "pass$randomNum"
         mockMvc.post("/api/user/register") {
             contentType = MediaType.APPLICATION_JSON
             content = "{\n" +
-                    "    \"username\": \"petter\",\n" +
-                    "    \"password\": \"pan\"\n" +
+                    "    \"username\": \"${username}\",\n" +
+                    "    \"password\": \"${password}\"\n" +
                     "}"
         }
             .andExpect { status { is2xxSuccessful() } }
@@ -35,8 +38,8 @@ class UserFullIntegrationTest {
         mockMvc.post("/api/authentication") {
             contentType = MediaType.APPLICATION_JSON
             content = "{\n" +
-                    "    \"username\": \"petter\",\n" +
-                    "    \"password\": \"pan\"\n" +
+                    "    \"username\": \"${username}\",\n" +
+                    "    \"password\": \"${password}\"\n" +
                     "}"
         }
             .andExpect { status { isOk() } }
@@ -66,11 +69,14 @@ class UserFullIntegrationTest {
 
     @Test
     fun shouldCreateUserAndDeleteById(){
+        val randomNum = (0..1000).random()
+        val username = "user$randomNum"
+        val password = "pass$randomNum"
         mockMvc.post("/api/user/register") {
             contentType = MediaType.APPLICATION_JSON
             content = "{\n" +
-                    "    \"username\": \"petter\",\n" +
-                    "    \"password\": \"pan\"\n" +
+                    "    \"username\": \"${username}\",\n" +
+                    "    \"password\": \"${password}\"\n" +
                     "}"
         }
             .andExpect { status { is2xxSuccessful() } }

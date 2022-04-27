@@ -2,7 +2,6 @@ package no.kristiania.pg5100_exam.unit.controller
 
 import io.mockk.every
 import io.mockk.mockk
-import no.kristiania.pg5100_exam.controller.NewUserInfo
 import no.kristiania.pg5100_exam.model.AuthorityEntity
 import no.kristiania.pg5100_exam.model.UserEntity
 import no.kristiania.pg5100_exam.service.AnimalService
@@ -14,7 +13,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
-import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.test.context.junit.jupiter.SpringExtension
@@ -22,7 +20,6 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
-import org.testcontainers.shaded.org.bouncycastle.util.encoders.UTF8
 import java.time.LocalDateTime
 
 
@@ -44,28 +41,31 @@ class AuthControllerUnitTest {
 
     @Test
     fun shouldRegisterUser() {
-        val newUserInfo = NewUserInfo("petter", "pan")
+        val randomNum = (0..1000).random()
+        val username = "user$randomNum"
+        val password = "pass$randomNum"
 
-        every { userService.registerUser(newUserInfo) } answers {
+
+        every { userService.registerUser(any()) } answers {
             UserEntity(
                 1,
-                "petter",
-                "pan",
+                username,
+                password,
                 LocalDateTime.now(),
                 true,
                 mutableListOf(AuthorityEntity(1, "USER"))
             )
         }
 
-        mockMvc.post("/api/authentication") {
+        mockMvc.post("/api/user/register") {
             contentType = MediaType.APPLICATION_JSON
+            characterEncoding = "UTF-8"
             content = "{\n" +
-                    "    \"username\": \"petter\",\n" +
-                    "    \"password\": \"pan\"\n" +
+                    "    \"username\": \"${username}\",\n" +
+                    "    \"password\": \"${password}}\"\n" +
                     "}"
         }
             .andExpect { status { is2xxSuccessful() } }
-            .andReturn().response.contentAsString.contains("petter")
     }
 
     @Test
@@ -76,7 +76,7 @@ class AuthControllerUnitTest {
             mutableListOf(testUser)
         }
 
-        mockMvc.get("/api/admin/user/all"){
+        mockMvc.get("/api/user/all"){
 
         }
             .andExpect { status { isOk() } }
@@ -91,7 +91,7 @@ class AuthControllerUnitTest {
                 AuthorityEntity(authorityName = "USER"))
         }
 
-        mockMvc.get("/api/admin/authority/all") {
+        mockMvc.get("/api/user/authorities") {
 
         }
             .andExpect { status { isOk() } }

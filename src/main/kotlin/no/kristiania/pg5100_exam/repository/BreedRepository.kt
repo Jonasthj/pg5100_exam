@@ -5,7 +5,4 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface BreedRepository : JpaRepository<BreedEntity, Long> {
-
-    fun getByName(name: String): BreedEntity?
-}
+interface BreedRepository : JpaRepository<BreedEntity, Long>

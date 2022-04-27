@@ -13,6 +13,8 @@ import java.net.URI
 @RequestMapping("/api/shelter")
 class AnimalController(@Autowired private val animalService: AnimalService) {
 
+    // User permission
+
     @GetMapping("/all")
     fun retrieveAllAnimals() : ResponseEntity<List<AnimalEntity?>> {
         return ResponseEntity.ok().body(animalService.getAllAnimals())
@@ -29,6 +31,11 @@ class AnimalController(@Autowired private val animalService: AnimalService) {
         return ResponseEntity.created(uri).body(animalService.addNewAnimal(newAnimal))
     }
 
+    @GetMapping("/display")
+    fun displayAnimals() : ResponseEntity<Any> {
+        return ResponseEntity.ok().body(animalService.displayAllAnimalsWithTypeAndBreedName())
+    }
+
     @PutMapping("/update")
     fun updateAnimal(
         @RequestParam id: Long,
@@ -37,6 +44,8 @@ class AnimalController(@Autowired private val animalService: AnimalService) {
 
         return animalService.updateAnimalById(id, newAnimal)
     }
+
+    // Admin permission
 
     @DeleteMapping("/delete")
     fun deleteAnimal(@RequestParam id: Long) : ResponseEntity<String> {
